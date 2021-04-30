@@ -3,9 +3,7 @@ from pyowm.utils.config import get_default_config
 import pyttsx3
 import sys
 import webbrowser
-import dictionary
 import pyowm
-import pesni
 import eel
 import random
 from pygame import mixer
@@ -20,15 +18,17 @@ eel.start('main.html', size=(600, 650))
 
 # 6f5dc1652adf891c89bf794c92ff3ba4 API key OWM
 
-cmd = dictionary.opts['cmd']['search']
-
 
 # Голос помошника
+
+
+@eel.expose
 def speak(what):
-    print(what)
     engine = pyttsx3.init()
     engine.say(what)
     engine.runAndWait()
+
+    return what
 
 
 speak("Привет, чем я могу помочь вам?")
@@ -42,6 +42,8 @@ speak("Привет, чем я могу помочь вам?")
 
 
 # Обработка голоса пользователя
+
+@eel.expose
 def makeSomething():
     # r = sr.Recognizer()
     #
@@ -66,10 +68,13 @@ def makeSomething():
 
 
 # Команды которые обрабатываются
-def command(zadanie):
-    global name, cmd, mistakes
 
-    rnd = random.randint(0, 1)
+@eel.expose
+def command(zadanie):
+    global name
+
+    if 'время' or 'час' in zadanie:
+        speak(time.strftime('%H:%M'))
 
     if 'что' and 'делает' and 'овца' in zadanie:
         speak('Я ебу. Ты видишь здесь зоолога?')
@@ -86,16 +91,13 @@ def command(zadanie):
         url = f'https://www.google.com/search?q={st}'
         webbrowser.open(url)
 
-    if 'время' or 'час' in zadanie:
-        speak(time.strftime('%H:%M'))
-
     if 'день' in zadanie:
         speak(time.strftime('Сейчас %d %B, %A'))
 
     if 'погода' in zadanie:
         speak(f'Температура в {place} сейчас в районе {int(temp)} градусов, {cloud}')
         print('Рекоменнации как одется: ')
-        if int(temp) >= 10:
+        if int(temp) and 'ясно' in cloud >= 10:
             speak('Можешь спокойно одеть кепку и стать репером как в одном анекдоте')
         elif 10 > int(temp) >= 5:
             speak('Придет надеть кофточку!')
