@@ -5,7 +5,6 @@ import sys
 import webbrowser
 import pyowm
 import eel
-import random
 from pygame import mixer
 import time
 import locale
