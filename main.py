@@ -13,7 +13,8 @@ locale.setlocale(locale.LC_ALL, 'Russian_Russia.1251')
 
 eel.init('web')
 
-eel.start('main.html', size=(600, 650))
+eel.start('main.html', size=(570, 620))
+
 
 # 6f5dc1652adf891c89bf794c92ff3ba4 API key OWM
 
@@ -33,17 +34,16 @@ def speak(what):
 speak("Привет, чем я могу помочь вам?")
 
 
-# r = sr.Recognizer()
-# m = sr.Microphone(device_index=1)
-#
-# with m as source:
-#     r.adjust_for_ambient_noise(source)
-
-
-# Обработка голоса пользователя
-
 @eel.expose
 def makeSomething():
+    # r = sr.Recognizer()
+    # m = sr.Microphone(device_index=1)
+    #
+    # with m as source:
+    #     r.adjust_for_ambient_noise(source)
+
+    # Обработка голоса пользователя
+
     # r = sr.Recognizer()
     #
     # with sr.Microphone() as source:
@@ -74,9 +74,6 @@ def command(zadanie):
 
     if 'время' or 'час' in zadanie:
         speak(time.strftime('%H:%M'))
-
-    if 'что' and 'делает' and 'овца' in zadanie:
-        speak('Я ебу. Ты видишь здесь зоолога?')
 
     if 'найди' in zadanie:
         st = ''

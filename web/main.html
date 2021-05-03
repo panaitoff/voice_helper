@@ -5,27 +5,21 @@
     <title>Assistant</title>
 
     <script src="eel.js"></script>
+    <script src="script.js"></script>
     <link rel="shortcut icon" href="image/favicon.png" type="image/png">
     <link rel="stylesheet" href="main.css" type="text/css">
 </head>
   
 <body>
-    <div>
-
-        <div class="container white">
-          <img src="https://img.icons8.com/ios-glyphs/30/000000/voice-id.png">
-          <p>Hello. How are you today?</p>
-        </div>
-
+    <div class="push" id="push">
+        <p id="my"></p>
     </div>
 
-    <div class="mesto">
-        Давай сочтемся на том что ни я тебе не видел, ни ты меня!
-    </div>
+    <div class="mesto"></div>
 
      <div class="fix_block">
-         <input type="text">
-         <a href="" class="floating-button">PUSH</a>
+         <input type="text" id="action">
+         <button onclick="display()">PUSH</button>
      </div>
 
 </body>
