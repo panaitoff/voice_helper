@@ -9,94 +9,99 @@ from pygame import mixer
 import time
 import locale
 
-locale.setlocale(locale.LC_ALL, 'Russian_Russia.1251')
 
-eel.init('web')
+# @eel.expose
+# def speak(what):
+#     engine = pyttsx3.init()
+#     engine.say(what)
+#     engine.runAndWait()
+#
+#     return what
 
-eel.start('main.html', size=(570, 620))
 
-
-# 6f5dc1652adf891c89bf794c92ff3ba4 API key OWM
-
-
-# Голос помошника
+# @eel.expose
+# def makeSomething():
+#     r = sr.Recognizer()
+#     m = sr.Microphone(device_index=1)
+#
+#     with m as source:
+#         r.adjust_for_ambient_noise(source)
+#
+#     # Обработка голоса пользователя
+#
+#     r = sr.Recognizer()
+#
+#     with sr.Microphone() as source:
+#         print("Говорите")
+#         r.pause_threshold = 1
+#         r.adjust_for_ambient_noise(source, duration=1)
+#         audio = r.listen(source)
+#
+#     try:
+#         zadanie = r.recognize_google(audio, language="ru-RU")
+#         print("Вы сказали: " + zadanie)
+#
+#     except sr.UnknownValueError:
+#         return "Я вас не поняла"
+#         zadanie = makeSomething()
+#
+#     # для it-куба
+#     # zadanie = input()
+#
+#     return zadanie.lower()
 
 
 @eel.expose
-def speak(what):
-    engine = pyttsx3.init()
-    engine.say(what)
-    engine.runAndWait()
+def command(task):
 
-    return what
+    def speak(what):
+        engine = pyttsx3.init()
+        engine.say(what)
+        engine.runAndWait()
 
+        return what
 
-speak("Привет, чем я могу помочь вам?")
+    locale.setlocale(locale.LC_ALL, 'Russian_Russia.1251')
 
+    owm = pyowm.OWM('6f5dc1652adf891c89bf794c92ff3ba4')
+    mgr = owm.weather_manager()
 
-@eel.expose
-def makeSomething():
-    # r = sr.Recognizer()
-    # m = sr.Microphone(device_index=1)
+    place = 'Санкт-Петербург'
+
+    config_dict = get_default_config()
+    config_dict['language'] = 'ru'
+
+    observation = mgr.weather_at_place(place)
+    w = observation.weather
+
+    temp = w.temperature('celsius')['temp']
+    cloud = w.detailed_status
+
+    # if 'время' or 'час' in task:
+    #     speak(time.strftime('%H:%M'))
+
+    # if 'найди' in task:
+    #     st = ''
+    #     a = task.split(' ')
+    #     a.pop(0)
     #
-    # with m as source:
-    #     r.adjust_for_ambient_noise(source)
-
-    # Обработка голоса пользователя
-
-    # r = sr.Recognizer()
+    #     for i in range(len(a)):
+    #         st += a[i]
     #
-    # with sr.Microphone() as source:
-    #     print("Говорите")
-    #     r.pause_threshold = 1
-    #     r.adjust_for_ambient_noise(source, duration=1)
-    #     audio = r.listen(source)
-    #
-    # try:
-    #     zadanie = r.recognize_google(audio, language="ru-RU")
-    #     print("Вы сказали: " + zadanie)
-    #
-    # except sr.UnknownValueError:
-    #     speak("Я вас не поняла")
-    #     zadanie = makeSomething()
+    #     speak("Уже открываю")
+    #     url = f'https://www.google.com/search?q={st}'
+    #     webbrowser.open(url)
 
-    # для it-куба
-    zadanie = input()
-
-    return zadanie.lower()
-
-
-# Команды которые обрабатываются
-
-@eel.expose
-def command(zadanie):
-    global name
-
-    if 'время' or 'час' in zadanie:
-        speak(time.strftime('%H:%M'))
-
-    if 'найди' in zadanie:
-        st = ''
-        a = zadanie.split(' ')
-        a.pop(0)
-
-        for i in range(len(a)):
-            st += a[i]
-
-        speak("Уже открываю")
-        url = f'https://www.google.com/search?q={st}'
-        webbrowser.open(url)
-
-    if 'день' in zadanie:
+    if 'день' in task:
         speak(time.strftime('Сейчас %d %B, %A'))
 
-    if 'погода' in zadanie:
+    if 'погода' in task:
         speak(f'Температура в {place} сейчас в районе {int(temp)} градусов, {cloud}')
-        print('Рекоменнации как одется: ')
+        speak('Рекоменнации как одется: ')
         if int(temp) and 'ясно' in cloud >= 10:
             speak('Можешь спокойно одеть кепку и стать репером как в одном анекдоте')
         elif 10 > int(temp) >= 5:
-            speak('Придет надеть кофточку!')
+            speak('Придется надеть кофточку!')
         elif 5 > int(temp) >= 0:
             speak('Шапочку только надень, а так норм')
         elif 0 > int(temp) >= -5:
@@ -108,18 +113,11 @@ def command(zadanie):
         elif int(temp) <= -30:
             speak('Надеюсь ты не на северном полюсе?')
 
-    elif 'новое имя' in zadanie:
-        speak('Какое?')
-        name = makeSomething()
-
-    elif 'стоп' in zadanie:
+    elif 'стоп' in task:
         speak("Да, конечно, без проблем")
         sys.exit()
 
-    elif 'имя' in zadanie:
-        speak(name)
-
-    elif 'спой' and 'песню' in zadanie:
+    elif 'спой' and 'песню' in task:
         mixer.init()
 
         speak('А теперь как вы и просили песня \"Аллы Пугачёвой - Айсберг\"')
@@ -168,26 +166,6 @@ def command(zadanie):
         mixer.music.stop()
 
 
-name = 'Сашка'
-
-# Для функционала
-owm = pyowm.OWM('6f5dc1652adf891c89bf794c92ff3ba4')
-mgr = owm.weather_manager()
-
-place = 'Санкт-Петербург'
-
-config_dict = get_default_config()
-config_dict['language'] = 'ru'
-
-observation = mgr.weather_at_place(place)
-w = observation.weather
-
-temp = w.temperature('celsius')['temp']
-cloud = w.detailed_status
-
-# Для приколов
-mistakes = -2
-
-# Основной цикл
-while True:
-    command(makeSomething())
+if __name__ == '__main__':
+    eel.init('web')
+    eel.start('main.html', size=(570, 620))
