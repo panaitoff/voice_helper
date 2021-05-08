@@ -10,13 +10,13 @@ import time
 import locale
 
 
-# @eel.expose
-# def speak(what):
-#     engine = pyttsx3.init()
-#     engine.say(what)
-#     engine.runAndWait()
-#
-#     return what
+@eel.expose
+def speak(what):
+    engine = pyttsx3.init()
+    engine.say(what)
+    engine.runAndWait()
+
+    return what
 
 
 # @eel.expose
@@ -53,14 +53,6 @@ import locale
 
 @eel.expose
 def command(task):
-
-    def speak(what):
-        engine = pyttsx3.init()
-        engine.say(what)
-        engine.runAndWait()
-
-        return what
-
     locale.setlocale(locale.LC_ALL, 'Russian_Russia.1251')
 
     owm = pyowm.OWM('6f5dc1652adf891c89bf794c92ff3ba4')
@@ -77,8 +69,8 @@ def command(task):
     temp = w.temperature('celsius')['temp']
     cloud = w.detailed_status
 
-    # if 'время' or 'час' in task:
-    #     speak(time.strftime('%H:%M'))
+    day = time.strftime('Сейчас %d %B, %A')
+    times = time.strftime('%H:%M')
 
     # if 'найди' in task:
     #     st = ''
@@ -93,77 +85,13 @@ def command(task):
     #     webbrowser.open(url)
 
     if 'день' in task:
-        speak(time.strftime('Сейчас %d %B, %A'))
+        return day
 
     if 'погода' in task:
-        speak(f'Температура в {place} сейчас в районе {int(temp)} градусов, {cloud}')
-        speak('Рекоменнации как одется: ')
-        if int(temp) and 'ясно' in cloud >= 10:
-            speak('Можешь спокойно одеть кепку и стать репером как в одном анекдоте')
-        elif 10 > int(temp) >= 5:
-            speak('Придется надеть кофточку!')
-        elif 5 > int(temp) >= 0:
-            speak('Шапочку только надень, а так норм')
-        elif 0 > int(temp) >= -5:
-            speak('Куртка, шапка и тапки. И лети гулять')
-        elif -5 > int(temp) >= -10:
-            speak(f'СКОЛЬКО {int(temp)}. Тут даже я хз как одется')
-        elif -10 > int(temp) >= -25:
-            speak('Можно в принципе футбольку одеть')
-        elif int(temp) <= -30:
-            speak('Надеюсь ты не на северном полюсе?')
+        return f'Температура в {place} сейчас в районе {int(temp)} градусов, {cloud}'
 
-    elif 'стоп' in task:
-        speak("Да, конечно, без проблем")
-        sys.exit()
-
-    elif 'спой' and 'песню' in task:
-        mixer.init()
-
-        speak('А теперь как вы и просили песня \"Аллы Пугачёвой - Айсберг\"')
-
-        mixer.music.load("music/айсберг.mp3")
-        mixer.music.set_volume(0.12)
-        mixer.music.play()
-
-        time.sleep(40)
-
-        speak('\nЛедяной горою айсберг из тумана вырастает'
-              '\nИ несёт его теченье по бескрайним по морям'
-              '\nХорошо тому, кто знает как опасен в океане'
-              '\nКак опасен в океане айсберг встречным кораблям')
-
-        speak('\nА я про всё на свете с тобою забываю'
-              '\nА я в любовь, как в море, бросаюсь с головой'
-              '\nА ты такой холодный как айсберг в океане'
-              '\nИ все твои печали под чёрною водой'
-              '\nИ все твои печали под чёрною водой')
-
-        speak('\nКто ты — горе или радость? То замерзнешь, то растаешь'
-              '\nКто ты — ласковое солнце или мёртвый белый снег?'
-              '\nЯ понять тебя пытаюсь, кто же ты на самом деле'
-              '\nКто же ты на самом деле, айсберг или человек?')
-
-        speak('\nА я про всё на свете с тобою забываю'
-              '\nА я в любовь, как в море, бросаюсь с головой'
-              '\nА ты такой холодный как айсберг в океане'
-              '\nИ все твои печали под чёрною водой'
-              '\nИ все твои печали под чёрною водой')
-
-        speak('\nТы уйди с моей дороги или стань моей судьбою'
-              '\nПротяни навстречу руки и поверить помоги'
-              '\nЧто любовь моя сумеет примирить меня с тобою'
-              '\nИ растает этот айсберг, это сердце без любви')
-
-        speak('\nА я про всё на свете с тобою забываю'
-              '\nА я в любовь, как в море, бросаюсь с головой'
-              '\nА ты такой холодный как айсберг в океане'
-              '\nИ все твои печали под чёрною водой'
-              '\nИ все твои печали под чёрною водой')
-
-        time.sleep(15)
-
-        mixer.music.stop()
+    if 'время' or 'час' in task:
+        return times
 
 
 if __name__ == '__main__':

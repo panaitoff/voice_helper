@@ -19,6 +19,6 @@ async function display(){
     var val = await eel.command(task)();
 
     document.getElementById("push").innerHTML += '<div class="container white"><img src="https://img.icons8.com/ios-glyphs/30/000000/voice-id.png" class="right"><p>' +
-                                                                   val +
+                                                                   await eel.speak(val)() +
                                                                    '</p><div>';
 }
