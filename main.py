@@ -1,11 +1,9 @@
 import speech_recognition as sr
 from pyowm.utils.config import get_default_config
 import pyttsx3
-import sys
 import webbrowser
 import pyowm
 import eel
-from pygame import mixer
 import time
 import locale
 
@@ -53,9 +51,14 @@ def speak(what):
 
 @eel.expose
 def command(task):
+
+    global dict
+
+    a = ''
+
     locale.setlocale(locale.LC_ALL, 'Russian_Russia.1251')
 
-    owm = pyowm.OWM('zdes doljen bit kod ot owm')
+    owm = pyowm.OWM('6f5dc1652adf891c89bf794c92ff3ba4')
     mgr = owm.weather_manager()
 
     place = 'Санкт-Петербург'
@@ -72,19 +75,29 @@ def command(task):
     day = time.strftime('Сейчас %d %B, %A')
     times = time.strftime('%H:%M')
 
-    if 'день' or ('какое' and 'число') in task:
-        return day
+    # if 'день' or ('какое' and 'число') in task:
+    #     return day
 
-    elif 'погода' in task:
+    if 'погода' in task:
         return f'Температура в {place} сейчас в районе {int(temp)} градусов, {cloud}'
 
-    elif 'время' or 'час' in task:
-        return times
+    # elif 'время' or 'час' in task:
+    #     return times
+
+    elif 'поставь' and 'будильник':
+        for i in range(len(dict)-1):
+            if dict[i] in task:
+                a += dict[i]
+        if len(a) < 4:
+            pass
+        return a
 
     else:
         url = f'https://www.google.com/search?q={task}'
         webbrowser.open(url)
 
+
+dict = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0']
 
 if __name__ == '__main__':
     eel.init('web')
