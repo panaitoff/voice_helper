@@ -55,7 +55,7 @@ def speak(what):
 def command(task):
     locale.setlocale(locale.LC_ALL, 'Russian_Russia.1251')
 
-    owm = pyowm.OWM('6f5dc1652adf891c89bf794c92ff3ba4')
+    owm = pyowm.OWM('zdes doljen bit kod ot owm')
     mgr = owm.weather_manager()
 
     place = 'Санкт-Петербург'
