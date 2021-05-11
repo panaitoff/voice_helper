@@ -88,7 +88,7 @@ def command(task):
         for i in range(len(dict)-1):
             if dict[i] in task:
                 a += dict[i]
-        if len(a) < 4:
+        if len(a) < 5:
             pass
         return a
 
