@@ -72,26 +72,18 @@ def command(task):
     day = time.strftime('Сейчас %d %B, %A')
     times = time.strftime('%H:%M')
 
-    # if 'найди' in task:
-    #     st = ''
-    #     a = task.split(' ')
-    #     a.pop(0)
-    #
-    #     for i in range(len(a)):
-    #         st += a[i]
-    #
-    #     speak("Уже открываю")
-    #     url = f'https://www.google.com/search?q={st}'
-    #     webbrowser.open(url)
-
-    if 'день' in task:
+    if 'день' or ('какое' and 'число') in task:
         return day
 
-    if 'погода' in task:
+    elif 'погода' in task:
         return f'Температура в {place} сейчас в районе {int(temp)} градусов, {cloud}'
 
-    if 'время' or 'час' in task:
+    elif 'время' or 'час' in task:
         return times
+
+    else:
+        url = f'https://www.google.com/search?q={task}'
+        webbrowser.open(url)
 
 
 if __name__ == '__main__':
