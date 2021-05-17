@@ -5,8 +5,10 @@ import webbrowser
 import pyowm
 import eel
 import time
+import os
 import locale
 
+VAL = ['mail', 'gmail', 'маил', 'гмаил', 'почту', 'youtube', 'ютуб', 'twitch', 'твич']
 
 @eel.expose
 def speak(what):
@@ -17,44 +19,37 @@ def speak(what):
     return what
 
 
-# @eel.expose
-# def makeSomething():
-#     r = sr.Recognizer()
-#     m = sr.Microphone(device_index=1)
-#
-#     with m as source:
-#         r.adjust_for_ambient_noise(source)
-#
-#     # Обработка голоса пользователя
-#
-#     r = sr.Recognizer()
-#
-#     with sr.Microphone() as source:
-#         print("Говорите")
-#         r.pause_threshold = 1
-#         r.adjust_for_ambient_noise(source, duration=1)
-#         audio = r.listen(source)
-#
-#     try:
-#         zadanie = r.recognize_google(audio, language="ru-RU")
-#         print("Вы сказали: " + zadanie)
-#
-#     except sr.UnknownValueError:
-#         return "Я вас не поняла"
-#         zadanie = makeSomething()
-#
-#     # для it-куба
-#     # zadanie = input()
-#
-#     return zadanie.lower()
+@eel.expose
+def makeSomething():
+    r = sr.Recognizer()
+    m = sr.Microphone(device_index=1)
+
+    with m as source:
+        r.adjust_for_ambient_noise(source)
+
+    r = sr.Recognizer()
+
+    with sr.Microphone() as source:
+        print("Говорите")
+        r.pause_threshold = 1
+        r.adjust_for_ambient_noise(source, duration=1)
+        audio = r.listen(source)
+
+    try:
+        zadanie = r.recognize_google(audio, language="ru-RU")
+        print("Вы сказали: " + zadanie)
+
+    except sr.UnknownValueError:
+        zadanie = makeSomething()
+        return "Я вас не поняла"
+
+    return zadanie.lower()
 
 
 @eel.expose
-def command(task):
+def command(a):
 
-    global dict
-
-    a = ''
+    task = str(a)
 
     locale.setlocale(locale.LC_ALL, 'Russian_Russia.1251')
 
@@ -75,29 +70,64 @@ def command(task):
     day = time.strftime('Сейчас %d %B, %A')
     times = time.strftime('%H:%M')
 
-    # if 'день' or ('какое' and 'число') in task:
-    #     return day
+    if ('день' or ('какое' and 'число')) in task:
+        return day
 
-    if 'погода' in task:
+    elif 'погода' in task:
         return f'Температура в {place} сейчас в районе {int(temp)} градусов, {cloud}'
 
-    # elif 'время' or 'час' in task:
-    #     return times
+    elif ('время' or 'час') in task:
+        return times
 
-    elif 'поставь' and 'будильник':
-        for i in range(len(dict)-1):
-            if dict[i] in task:
-                a += dict[i]
-        if len(a) < 5:
-            pass
-        return a
+    elif ('выключи' and 'копмьютер') in task:
+        os.system('shutdown -s')
+        return 'Выключаю!'
+
+    elif ('перезагрузи' and 'копмьютер') in task:
+        os.system(['shutdown', '-r' '-t', '0'])
+        return 'минуточку'
+
+    elif 'открой' in task:
+        for i in range(len(VAL)):
+            if (VAL[i] == ('ютуб' or 'youtube')) in task:
+                url = 'https://www.youtube.com'
+                webbrowser.open(url)
+                return 'открываю'
+
+            elif VAL[i] == ('gmail' or 'гмаил' or 'почту') in task:
+                url = 'https://mail.google.com'
+                webbrowser.open(url)
+                return 'открываю'
+
+            elif VAL[i] == ('mail' or 'маил') in task:
+                url = 'https://mail.ru'
+                webbrowser.open(url)
+                return 'открываю'
+
+            elif VAL[i] == ('twitch' or 'твич') in task:
+                url = 'https://twitch.tv'
+                webbrowser.open(url)
+                return 'открываю'
+
+            elif VAL[i] == ('твитер' or 'твиттер' or 'twitter') in task:
+                url = 'https://twitter.com'
+                webbrowser.open(url)
+                return 'открываю'
+
+            elif VAL[i] == ('вк' or 'вконтакте' or 'vk' or 'vkontakte') in task:
+                url = 'https://vk.com'
+                webbrowser.open(url)
+                return 'открываю'
+
+            elif VAL[i] == ('инстаграмм' or 'инстаграм' or 'instagram' or 'инсту') in task:
+                url = 'https://www.instagram.com/'
+                webbrowser.open(url)
+                return 'открываю'
 
     else:
         url = f'https://www.google.com/search?q={task}'
         webbrowser.open(url)
 
-
-dict = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0']
 
 if __name__ == '__main__':
     eel.init('web')
