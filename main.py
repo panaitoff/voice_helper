@@ -8,7 +8,6 @@ import time
 import os
 import locale
 
-VAL = ['mail', 'gmail', 'маил', 'гмаил', 'почту', 'youtube', 'ютуб', 'twitch', 'твич']
 
 @eel.expose
 def speak(what):
@@ -48,7 +47,6 @@ def makeSomething():
 
 @eel.expose
 def command(a):
-
     task = str(a)
 
     locale.setlocale(locale.LC_ALL, 'Russian_Russia.1251')
@@ -87,42 +85,40 @@ def command(a):
         os.system(['shutdown', '-r' '-t', '0'])
         return 'минуточку'
 
-    elif 'открой' in task:
-        for i in range(len(VAL)):
-            if (VAL[i] == ('ютуб' or 'youtube')) in task:
-                url = 'https://www.youtube.com'
-                webbrowser.open(url)
-                return 'открываю'
+    elif 'открой' and ('ютуб' or 'youtube') in task:
+        url = 'https://www.youtube.com'
+        webbrowser.open(url)
+        return 'открываю'
 
-            elif VAL[i] == ('gmail' or 'гмаил' or 'почту') in task:
-                url = 'https://mail.google.com'
-                webbrowser.open(url)
-                return 'открываю'
+    elif 'открой' and ('gmail' or 'гмаил' or 'почту') in task:
+        url = 'https://mail.google.com'
+        webbrowser.open(url)
+        return 'открываю'
 
-            elif VAL[i] == ('mail' or 'маил') in task:
-                url = 'https://mail.ru'
-                webbrowser.open(url)
-                return 'открываю'
+    elif 'открой' and ('mail' or 'маил') in task:
+        url = 'https://mail.ru'
+        webbrowser.open(url)
+        return 'открываю'
 
-            elif VAL[i] == ('twitch' or 'твич') in task:
-                url = 'https://twitch.tv'
-                webbrowser.open(url)
-                return 'открываю'
+    elif 'открой' and ('twitch' or 'твич') in task:
+        url = 'https://twitch.tv'
+        webbrowser.open(url)
+        return 'открываю'
 
-            elif VAL[i] == ('твитер' or 'твиттер' or 'twitter') in task:
-                url = 'https://twitter.com'
-                webbrowser.open(url)
-                return 'открываю'
+    elif 'открой' and ('твитер' or 'твиттер' or 'twitter') in task:
+        url = 'https://twitter.com'
+        webbrowser.open(url)
+        return 'открываю'
 
-            elif VAL[i] == ('вк' or 'вконтакте' or 'vk' or 'vkontakte') in task:
-                url = 'https://vk.com'
-                webbrowser.open(url)
-                return 'открываю'
+    elif 'открой' and ('вк' or 'вконтакте' or 'vk' or 'vkontakte') in task:
+        url = 'https://vk.com'
+        webbrowser.open(url)
+        return 'открываю'
 
-            elif VAL[i] == ('инстаграмм' or 'инстаграм' or 'instagram' or 'инсту') in task:
-                url = 'https://www.instagram.com/'
-                webbrowser.open(url)
-                return 'открываю'
+    elif 'открой' and ('инстаграмм' or 'инстаграм' or 'instagram' or 'инсту') in task:
+        url = 'https://www.instagram.com/'
+        webbrowser.open(url)
+        return 'открываю'
 
     else:
         url = f'https://www.google.com/search?q={task}'
