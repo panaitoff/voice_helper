@@ -2,6 +2,10 @@
 
 async function display() {
 
+
+
+
+
         var task = document.getElementById("action").value;
         var val = await eel.command(task)();
 
@@ -25,3 +29,16 @@ async function display() {
                                                                        '</p><div>';
 }
 
+async function inp() {
+    var change = document.getElementById("btn");
+    var element = document.getElementById("action");
+
+    if (element.clicked == true)
+    {
+        change.innerHTML = "push";
+    }
+    else {
+        change.innerHTML = "speak";
+    }
+
+}
