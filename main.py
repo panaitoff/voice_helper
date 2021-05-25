@@ -19,35 +19,8 @@ def speak(what):
 
 
 @eel.expose
-def makeSomething():
-    r = sr.Recognizer()
-    m = sr.Microphone(device_index=1)
-
-    with m as source:
-        r.adjust_for_ambient_noise(source)
-
-    r = sr.Recognizer()
-
-    with sr.Microphone() as source:
-        print("Говорите")
-        r.pause_threshold = 1
-        r.adjust_for_ambient_noise(source, duration=1)
-        audio = r.listen(source)
-
-    try:
-        zadanie = r.recognize_google(audio, language="ru-RU")
-        print("Вы сказали: " + zadanie)
-
-    except sr.UnknownValueError:
-        zadanie = makeSomething()
-        return "Я вас не поняла"
-
-    return zadanie.lower()
-
-
-@eel.expose
 def command(a):
-    task = str(a)
+    task = a
 
     locale.setlocale(locale.LC_ALL, 'Russian_Russia.1251')
 
@@ -77,7 +50,7 @@ def command(a):
     elif ('время' or 'час') in task:
         return times
 
-    elif ('выключи' and 'копмьютер') in task:
+    elif ('выключи' and 'компьютер') in task:
         os.system('shutdown -s')
         return 'Выключаю!'
 
@@ -127,4 +100,4 @@ def command(a):
 
 if __name__ == '__main__':
     eel.init('web')
-    eel.start('main.html', size=(570, 620))
+    eel.start('main.html', size=(560, 690))
