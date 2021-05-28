@@ -20,7 +20,7 @@ def speak(what):
 
 @eel.expose
 def command(a):
-    task = a
+    task = a.lower()
 
     locale.setlocale(locale.LC_ALL, 'Russian_Russia.1251')
 
@@ -58,7 +58,7 @@ def command(a):
         os.system(['shutdown', '-r' '-t', '0'])
         return 'минуточку'
 
-    elif 'открой' and ('ютуб' or 'youtube') in task:
+    elif 'открой' and ('youtube' or 'ютуб') in task:
         url = 'https://www.youtube.com'
         webbrowser.open(url)
         return 'открываю'
@@ -93,11 +93,16 @@ def command(a):
         webbrowser.open(url)
         return 'открываю'
 
-    else:
-        url = f'https://www.google.com/search?q={task}'
+    elif ('как' or 'какой') in task:
+        url = f'https://yandex.ru/search/?lr=10871&text={task}'
         webbrowser.open(url)
+        return 'Попытаюсь найти в интернете!'
+
+    else:
+        print(task)
+        return 'Я не знаю этой команды'
 
 
 if __name__ == '__main__':
     eel.init('web')
-    eel.start('main.html', size=(560, 690))
+    eel.start('main.html', size=(570, 700))
